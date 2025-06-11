@@ -54,7 +54,7 @@ function App() {
       <Container maxWidth="md" className="App">
         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, width: '100%' }}>
           <Box sx={{ flexBasis: '65%', flexGrow: 1 }}>
-            <Calendar onDateClick={handleDateClick} />
+            <Calendar onDateClick={handleDateClick} events={events} />
           </Box>
           <Box sx={{ flexBasis: '35%' }}>
             <EventList events={events} onEdit={handleEditEvent} />

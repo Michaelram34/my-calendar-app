@@ -24,7 +24,16 @@ function generateCalendar(year, month) {
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export default function Calendar({ onDateClick }) {
+function isSameDay(d1, d2) {
+  if (!d1 || !d2) return false;
+  return (
+    d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate()
+  );
+}
+
+export default function Calendar({ onDateClick, events = [] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -62,6 +71,9 @@ export default function Calendar({ onDateClick }) {
             today.getDate() === day &&
             today.getMonth() === month &&
             today.getFullYear() === year;
+          const hasEvents = day && events.some(ev =>
+            isSameDay(new Date(ev.dateTime), new Date(year, month, day))
+          );
           return (
             <Box
               key={idx}
@@ -74,6 +86,7 @@ export default function Calendar({ onDateClick }) {
                 justifyContent: 'center',
                 cursor: day ? 'pointer' : 'default',
                 borderRadius: 1,
+                position: 'relative',
                 backgroundColor: isToday ? 'primary.main' : undefined,
                 color: isToday ? 'primary.contrastText' : undefined,
                 '&:hover': {
@@ -83,8 +96,24 @@ export default function Calendar({ onDateClick }) {
               onClick={() => day && onDateClick && onDateClick(new Date(year, month, day))}
               data-testid={day ? `day-${day}` : undefined}
               data-today={isToday ? 'true' : undefined}
+              data-has-events={hasEvents ? 'true' : undefined}
             >
               {day || ''}
+              {hasEvents && (
+                <Box
+                  data-testid={`events-${day}`}
+                  sx={{
+                    position: 'absolute',
+                    bottom: 4,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 6,
+                    height: 6,
+                    borderRadius: '50%',
+                    backgroundColor: 'secondary.main'
+                  }}
+                />
+              )}
             </Box>
           );
         })}
