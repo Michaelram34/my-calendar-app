@@ -52,6 +52,16 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
   const [color, setColor] = useState(COLOR_OPTIONS[0].value);
   const [editingId, setEditingId] = useState(null);
 
+  const resetForm = useCallback(() => {
+    setTitle('');
+    setDateTime(createDefaultDateTime());
+    setDuration('');
+    setLocation('');
+    setDescription('');
+    setColor(COLOR_OPTIONS[0].value);
+    setEditingId(null);
+  }, [createDefaultDateTime]);
+
   useEffect(() => {
     if (open && defaultDate) {
       setDateTime(createDefaultDateTime(defaultDate));
@@ -75,17 +85,6 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
       setEditingId(editingEvent.id);
     }
   }, [editingEvent]);
-
-
-  const resetForm = useCallback(() => {
-    setTitle('');
-    setDateTime(createDefaultDateTime());
-    setDuration('');
-    setLocation('');
-    setDescription('');
-    setColor(COLOR_OPTIONS[0].value);
-    setEditingId(null);
-  }, [createDefaultDateTime]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
