@@ -10,7 +10,7 @@ export default function EventList({ events, onEdit }) {
       <Typography variant="h6" align="center" gutterBottom>
         Events
       </Typography>
-      <List sx={{ maxHeight: '70vh', overflow: 'auto', p: 0 }}>
+      <List sx={{ maxHeight: '70vh', overflow: 'auto', p: 0, pt: 1 }}>
         {sortedEvents.length === 0 && (
           <ListItemButton disabled sx={{ border: 1, borderColor: 'divider', mb: 1, borderRadius: 1 }}>
             <Typography variant="body2">No events</Typography>
