@@ -1,14 +1,14 @@
 import React from 'react';
-import { Box, List, ListItem, Typography, IconButton, Paper } from '@mui/material';
+import { Box, List, ListItem, Typography, IconButton } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
 
 export default function EventList({ events, onEdit, onDelete }) {
   return (
-    <Paper sx={{ width: 300, p: 2 }}>
+    <Box sx={{ width: '100%', p: 2 }}>
       <Typography variant="h6" align="center" gutterBottom>
         Events
       </Typography>
-      <List sx={{ maxHeight: 400, overflow: 'auto' }}>
+      <List sx={{ maxHeight: '70vh', overflow: 'auto', p: 0 }}>
         {events.length === 0 && (
           <ListItem>
             <Typography variant="body2">No events</Typography>
@@ -38,6 +38,6 @@ export default function EventList({ events, onEdit, onDelete }) {
           </ListItem>
         ))}
       </List>
-    </Paper>
+    </Box>
   );
 }
