@@ -10,11 +10,22 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  MenuItem
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { LocalizationProvider, DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+
+const COLOR_OPTIONS = [
+  { name: 'Red', value: '#FF0000' },
+  { name: 'Orange', value: '#FF7F00' },
+  { name: 'Yellow', value: '#FFFF00' },
+  { name: 'Green', value: '#00FF00' },
+  { name: 'Blue', value: '#0000FF' },
+  { name: 'Indigo', value: '#4B0082' },
+  { name: 'Violet', value: '#8B00FF' }
+];
 
 function isSameDay(d1, d2) {
   if (!d1 || !d2) return false;
@@ -38,7 +49,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
   const [duration, setDuration] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
-  const [color, setColor] = useState('#2196f3');
+  const [color, setColor] = useState(COLOR_OPTIONS[0].value);
   const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
@@ -60,7 +71,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
       setDuration(editingEvent.duration || '');
       setLocation(editingEvent.location || '');
       setDescription(editingEvent.description || '');
-      setColor(editingEvent.color || '#2196f3');
+      setColor(editingEvent.color || COLOR_OPTIONS[0].value);
       setEditingId(editingEvent.id);
     }
   }, [editingEvent]);
@@ -72,7 +83,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
     setDuration('');
     setLocation('');
     setDescription('');
-    setColor('#2196f3');
+    setColor(COLOR_OPTIONS[0].value);
     setEditingId(null);
   };
 
@@ -104,7 +115,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
     setDuration(ev.duration || '');
     setLocation(ev.location || '');
     setDescription(ev.description || '');
-    setColor(ev.color || '#2196f3');
+    setColor(ev.color || COLOR_OPTIONS[0].value);
     setEditingId(id);
   };
 
@@ -182,13 +193,26 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
           fullWidth
         />
         <TextField
+          select
           label="Color"
-          type="color"
           value={color}
           onChange={(e) => setColor(e.target.value)}
-          sx={{ width: 80 }}
-          InputLabelProps={{ shrink: true }}
-        />
+          sx={{ minWidth: 120 }}
+        >
+          {COLOR_OPTIONS.map((opt) => (
+            <MenuItem key={opt.value} value={opt.value}>
+              <Box sx={{
+                width: 12,
+                height: 12,
+                borderRadius: '50%',
+                backgroundColor: opt.value,
+                display: 'inline-block',
+                mr: 1
+              }} />
+              {opt.name}
+            </MenuItem>
+          ))}
+        </TextField>
         <TextField
           label="Description"
           value={description}
