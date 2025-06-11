@@ -25,11 +25,7 @@ function isSameDay(d1, d2) {
   );
 }
 
-export default function EventManager({ open, onClose, defaultDate }) {
-  const [events, setEvents] = useState(() => {
-    const stored = localStorage.getItem('events');
-    return stored ? JSON.parse(stored) : [];
-  });
+export default function EventManager({ open, onClose, defaultDate, events, setEvents }) {
 
   const [title, setTitle] = useState('');
   const [dateTime, setDateTime] = useState(new Date());
@@ -42,9 +38,6 @@ export default function EventManager({ open, onClose, defaultDate }) {
     }
   }, [open, defaultDate]);
 
-  useEffect(() => {
-    localStorage.setItem('events', JSON.stringify(events));
-  }, [events]);
 
   const resetForm = () => {
     setTitle('');
