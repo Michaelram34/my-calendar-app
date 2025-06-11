@@ -25,7 +25,7 @@ function isSameDay(d1, d2) {
   );
 }
 
-export default function EventManager({ open, onClose, defaultDate, events, setEvents }) {
+export default function EventManager({ open, onClose, defaultDate, events, setEvents, editingEvent }) {
 
   const [title, setTitle] = useState('');
   const [dateTime, setDateTime] = useState(new Date());
@@ -37,6 +37,21 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
       setDateTime(new Date(defaultDate));
     }
   }, [open, defaultDate]);
+
+  useEffect(() => {
+    if (!open) {
+      resetForm();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (editingEvent) {
+      setTitle(editingEvent.title);
+      setDateTime(new Date(editingEvent.dateTime));
+      setDuration(editingEvent.duration || '');
+      setEditingId(editingEvent.id);
+    }
+  }, [editingEvent]);
 
 
   const resetForm = () => {
