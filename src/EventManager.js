@@ -88,6 +88,9 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
   };
 
   const handleDelete = (id) => {
+    if (!window.confirm('Are you sure you want to delete this event?')) {
+      return;
+    }
     setEvents(events.filter(ev => ev.id !== id));
     if (editingId === id) {
       resetForm();
