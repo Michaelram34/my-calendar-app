@@ -1,0 +1,18 @@
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.calendar-table th,
+.calendar-table td {
+  border: 1px solid #ddd;
+  width: 14.28%;
+  height: 80px;
+  text-align: center;
+  vertical-align: top;
+  cursor: pointer;
+}
+
+.calendar-table td.has-events {
+  background-color: #fff3cd;
+}

@@ -1,0 +1,17 @@
+.event-list {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.event-list ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.event-list li {
+  margin-bottom: 0.25rem;
+}
+
+.event-list input {
+  margin-right: 0.5rem;
+}
