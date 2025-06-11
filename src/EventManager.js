@@ -104,6 +104,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
       setEvents([...events, event]);
     }
     resetForm();
+    onClose();
   };
 
   const handleEdit = (id) => {
