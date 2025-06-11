@@ -13,7 +13,7 @@ import {
   DialogActions
 } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider, DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 function isSameDay(d1, d2) {
@@ -27,14 +27,22 @@ function isSameDay(d1, d2) {
 
 export default function EventManager({ open, onClose, defaultDate, events, setEvents, editingEvent }) {
 
+  const createDefaultDateTime = (baseDate) => {
+    const d = baseDate ? new Date(baseDate) : new Date();
+    d.setHours(17, 0, 0, 0);
+    return d;
+  };
+
   const [title, setTitle] = useState('');
-  const [dateTime, setDateTime] = useState(new Date());
+  const [dateTime, setDateTime] = useState(createDefaultDateTime());
   const [duration, setDuration] = useState('');
+  const [location, setLocation] = useState('');
+  const [description, setDescription] = useState('');
   const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     if (open && defaultDate) {
-      setDateTime(new Date(defaultDate));
+      setDateTime(createDefaultDateTime(defaultDate));
     }
   }, [open, defaultDate]);
 
@@ -49,6 +57,8 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
       setTitle(editingEvent.title);
       setDateTime(new Date(editingEvent.dateTime));
       setDuration(editingEvent.duration || '');
+      setLocation(editingEvent.location || '');
+      setDescription(editingEvent.description || '');
       setEditingId(editingEvent.id);
     }
   }, [editingEvent]);
@@ -56,8 +66,10 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
 
   const resetForm = () => {
     setTitle('');
-    setDateTime(new Date());
+    setDateTime(createDefaultDateTime());
     setDuration('');
+    setLocation('');
+    setDescription('');
     setEditingId(null);
   };
 
@@ -68,7 +80,9 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
       id: editingId || Date.now(),
       title,
       dateTime: dateTime ? dateTime.toISOString() : new Date().toISOString(),
-      duration
+      duration,
+      location,
+      description
     };
     if (editingId) {
       setEvents(events.map(ev => (ev.id === editingId ? event : ev)));
@@ -84,6 +98,8 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
     setTitle(ev.title);
     setDateTime(new Date(ev.dateTime));
     setDuration(ev.duration || '');
+    setLocation(ev.location || '');
+    setDescription(ev.description || '');
     setEditingId(id);
   };
 
@@ -121,10 +137,28 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
             required
           />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DateTimePicker
-            label="Date & Time"
+          <DatePicker
+            label="Date"
             value={dateTime}
-            onChange={(newValue) => setDateTime(newValue)}
+            onChange={(newValue) => {
+              if (newValue) {
+                const updated = new Date(dateTime);
+                updated.setFullYear(newValue.getFullYear(), newValue.getMonth(), newValue.getDate());
+                setDateTime(updated);
+              }
+            }}
+            slotProps={{ textField: { variant: 'outlined' } }}
+          />
+          <TimePicker
+            label="Time"
+            value={dateTime}
+            onChange={(newValue) => {
+              if (newValue) {
+                const updated = new Date(dateTime);
+                updated.setHours(newValue.getHours(), newValue.getMinutes());
+                setDateTime(updated);
+              }
+            }}
             slotProps={{ textField: { variant: 'outlined' } }}
           />
         </LocalizationProvider>
@@ -133,6 +167,20 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
             type="number"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
+          />
+          <TextField
+            label="Location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            fullWidth
+          />
+          <TextField
+            label="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            multiline
+            rows={3}
+            fullWidth
           />
           <Button type="submit" variant="contained">
             {editingId ? 'Update' : 'Add'}
