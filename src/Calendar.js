@@ -71,9 +71,10 @@ export default function Calendar({ onDateClick, events = [] }) {
             today.getDate() === day &&
             today.getMonth() === month &&
             today.getFullYear() === year;
-          const hasEvents = day && events.some(ev =>
+          const eventsForDay = day ? events.filter(ev =>
             isSameDay(new Date(ev.dateTime), new Date(year, month, day))
-          );
+          ) : [];
+          const hasEvents = eventsForDay.length > 0;
           return (
             <Box
               key={idx}
@@ -107,12 +108,23 @@ export default function Calendar({ onDateClick, events = [] }) {
                     bottom: 4,
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    width: 6,
-                    height: 6,
-                    borderRadius: '50%',
-                    backgroundColor: 'secondary.main'
+                    display: 'flex',
+                    gap: 0.5
                   }}
-                />
+                >
+                  {eventsForDay.slice(0,3).map((ev, i) => (
+                    <Box
+                      key={i}
+                      data-testid={`event-dot-${day}-${i}`}
+                      sx={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: '50%',
+                        backgroundColor: ev.color || 'secondary.main'
+                      }}
+                    />
+                  ))}
+                </Box>
               )}
             </Box>
           );

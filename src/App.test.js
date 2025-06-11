@@ -19,12 +19,15 @@ test('shows indicator on day with events', () => {
   const event = {
     id: 1,
     title: 'Test',
-    dateTime: today.toISOString()
+    dateTime: today.toISOString(),
+    color: '#ff0000'
   };
   window.localStorage.setItem('events', JSON.stringify([event]));
   render(<App />);
   const dayCell = screen.getByTestId(`day-${today.getDate()}`);
   expect(dayCell).toHaveAttribute('data-has-events', 'true');
+  const dot = screen.getByTestId(`event-dot-${today.getDate()}-0`);
+  expect(dot).toHaveStyle(`background-color: ${event.color}`);
   window.localStorage.removeItem('events');
 });
 
