@@ -101,7 +101,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
     : events;
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
         Manage Events{defaultDate ? ` - ${new Date(defaultDate).toDateString()}` : ''}
       </DialogTitle>
@@ -135,7 +135,12 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
             {editingId ? 'Update' : 'Add'}
           </Button>
         </Box>
-        <List>
+        <List sx={{ maxHeight: 300, overflow: 'auto' }}>
+          {eventsForDay.length === 0 && (
+            <ListItem>
+              <Typography variant="body2">No events</Typography>
+            </ListItem>
+          )}
           {eventsForDay.map((ev) => (
             <ListItem
               key={ev.id}
