@@ -2,6 +2,16 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Setup
+
+Before running the app, install the dependencies:
+
+```bash
+npm install
+```
+
+This installs Material UI along with the `@mui/x-date-pickers` package used by the event manager.
+
 ## Available Scripts
 
 In the project directory, you can run:
