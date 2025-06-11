@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
 
 test('renders calendar header', () => {
@@ -29,5 +29,16 @@ test('shows indicator on day with events', () => {
   const dot = screen.getByTestId(`event-dot-${today.getDate()}-0`);
   expect(dot).toHaveStyle(`background-color: ${event.color}`);
   window.localStorage.removeItem('events');
+});
+
+test('today button resets the calendar', () => {
+  render(<App />);
+  const nextBtn = screen.getByTestId('next-month');
+  fireEvent.click(nextBtn);
+  const todayLabel = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+  expect(screen.getByTestId('month-label').textContent).not.toBe(todayLabel);
+  const todayBtn = screen.getByTestId('today-button');
+  fireEvent.click(todayBtn);
+  expect(screen.getByTestId('month-label').textContent).toBe(todayLabel);
 });
 
