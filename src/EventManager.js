@@ -12,7 +12,7 @@ import {
   DialogContent,
   DialogActions
 } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+import { Delete } from '@mui/icons-material';
 import { LocalizationProvider, DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
@@ -119,6 +119,8 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
       )
     : events;
 
+  const showList = defaultDate || !editingEvent;
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
@@ -186,36 +188,35 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
             {editingId ? 'Update' : 'Add'}
           </Button>
         </Box>
-        <List sx={{ maxHeight: 300, overflow: 'auto' }}>
-          {eventsForDay.length === 0 && (
-            <ListItem>
-              <Typography variant="body2">No events</Typography>
-            </ListItem>
-          )}
-          {eventsForDay.map((ev) => (
-            <ListItem
-              key={ev.id}
-              secondaryAction={
-                <Box>
-                  <IconButton edge="end" aria-label="edit" onClick={() => handleEdit(ev.id)}>
-                    <Edit />
-                  </IconButton>
+        {showList && (
+          <List sx={{ maxHeight: 300, overflow: 'auto' }}>
+            {eventsForDay.length === 0 && (
+              <ListItem>
+                <Typography variant="body2">No events</Typography>
+              </ListItem>
+            )}
+            {eventsForDay.map((ev) => (
+              <ListItem
+                key={ev.id}
+                secondaryAction={
                   <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(ev.id)}>
                     <Delete />
                   </IconButton>
+                }
+                onClick={() => handleEdit(ev.id)}
+                button
+              >
+                <Box sx={{ flexGrow: 1 }}>
+                  <Typography variant="subtitle1">{ev.title}</Typography>
+                  <Typography variant="body2">
+                    {new Date(ev.dateTime).toLocaleString()}
+                    {ev.duration ? ` - ${ev.duration} min` : ''}
+                  </Typography>
                 </Box>
-              }
-            >
-              <Box sx={{ flexGrow: 1 }}>
-                <Typography variant="subtitle1">{ev.title}</Typography>
-                <Typography variant="body2">
-                  {new Date(ev.dateTime).toLocaleString()}
-                  {ev.duration ? ` - ${ev.duration} min` : ''}
-                </Typography>
-              </Box>
-            </ListItem>
-          ))}
-        </List>
+              </ListItem>
+            ))}
+          </List>
+        )}
       </DialogContent>
       <DialogActions>
         {editingId && (
