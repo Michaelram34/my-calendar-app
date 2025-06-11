@@ -7,8 +7,7 @@ import {
   Box,
   AppBar,
   Toolbar,
-  Typography,
-  Paper
+  Typography
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 
@@ -56,13 +55,13 @@ function App() {
         </Toolbar>
       </AppBar>
       <Container maxWidth="md" className="App">
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', gap: 4 }}>
-          <Paper sx={{ p: 2, flexGrow: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, width: '100%' }}>
+          <Box sx={{ flexBasis: '65%', flexGrow: 1 }}>
             <Calendar onDateClick={handleDateClick} />
-          </Paper>
-          <Paper sx={{ p: 2, width: 320 }}>
+          </Box>
+          <Box sx={{ flexBasis: '35%' }}>
             <EventList events={events} onEdit={handleEditEvent} onDelete={handleDeleteEvent} />
-          </Paper>
+          </Box>
         </Box>
         <EventManager
           open={dialogOpen}

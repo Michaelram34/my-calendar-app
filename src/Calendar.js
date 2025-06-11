@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, IconButton, Paper } from '@mui/material';
+import { Box, Typography, IconButton } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 
 function generateCalendar(year, month) {
@@ -43,7 +43,7 @@ export default function Calendar({ onDateClick }) {
   });
 
   return (
-    <Paper sx={{ maxWidth: 400, mx: 'auto', mt: 2, p: 2 }}>
+    <Box sx={{ width: '100%', p: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <IconButton onClick={handlePrevMonth} data-testid="prev-month"><ChevronLeft /></IconButton>
         <Typography variant="h6" component="div" data-testid="month-label">{monthLabel}</Typography>
@@ -61,7 +61,7 @@ export default function Calendar({ onDateClick }) {
             sx={{
               border: 1,
               borderColor: 'divider',
-              height: 40,
+              height: 60,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -78,6 +78,6 @@ export default function Calendar({ onDateClick }) {
           </Box>
         ))}
       </Box>
-    </Paper>
+    </Box>
   );
 }
