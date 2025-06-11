@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Box, Typography, IconButton } from '@mui/material';
+import {
+  Box,
+  Typography,
+  IconButton,
+  ToggleButton,
+  ToggleButtonGroup
+} from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 
 function generateCalendar(year, month) {
@@ -22,6 +28,18 @@ function generateCalendar(year, month) {
   return weeks;
 }
 
+function generateWeek(date) {
+  const start = new Date(date);
+  start.setDate(date.getDate() - start.getDay());
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start);
+    d.setDate(start.getDate() + i);
+    days.push(d);
+  }
+  return days;
+}
+
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 function isSameDay(d1, d2) {
@@ -35,44 +53,87 @@ function isSameDay(d1, d2) {
 
 export default function Calendar({ onDateClick, events = [] }) {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [view, setView] = useState('month'); // month | week | day
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const weeks = generateCalendar(year, month);
+  const weekDays = generateWeek(currentDate);
   const today = new Date();
 
-  const handlePrevMonth = () => {
-    setCurrentDate(new Date(year, month - 1, 1));
-  };
-  const handleNextMonth = () => {
-    setCurrentDate(new Date(year, month + 1, 1));
+  const handlePrev = () => {
+    if (view === 'month') {
+      setCurrentDate(new Date(year, month - 1, 1));
+    } else if (view === 'week') {
+      const d = new Date(currentDate);
+      d.setDate(d.getDate() - 7);
+      setCurrentDate(d);
+    } else {
+      const d = new Date(currentDate);
+      d.setDate(d.getDate() - 1);
+      setCurrentDate(d);
+    }
   };
 
-  const monthLabel = currentDate.toLocaleString('default', {
-    month: 'long',
-    year: 'numeric'
-  });
+  const handleNext = () => {
+    if (view === 'month') {
+      setCurrentDate(new Date(year, month + 1, 1));
+    } else if (view === 'week') {
+      const d = new Date(currentDate);
+      d.setDate(d.getDate() + 7);
+      setCurrentDate(d);
+    } else {
+      const d = new Date(currentDate);
+      d.setDate(d.getDate() + 1);
+      setCurrentDate(d);
+    }
+  };
+
+  let monthLabel;
+  if (view === 'month') {
+    monthLabel = currentDate.toLocaleString('default', {
+      month: 'long',
+      year: 'numeric'
+    });
+  } else if (view === 'week') {
+    const start = new Date(currentDate);
+    start.setDate(currentDate.getDate() - start.getDay());
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+    monthLabel = `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`;
+  } else {
+    monthLabel = currentDate.toDateString();
+  }
 
   return (
     <Box sx={{ width: '100%', p: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <IconButton onClick={handlePrevMonth} data-testid="prev-month"><ChevronLeft /></IconButton>
+        <IconButton onClick={handlePrev} data-testid="prev-month"><ChevronLeft /></IconButton>
         <Typography variant="h6" component="div" data-testid="month-label">{monthLabel}</Typography>
-        <IconButton onClick={handleNextMonth} data-testid="next-month"><ChevronRight /></IconButton>
+        <IconButton onClick={handleNext} data-testid="next-month"><ChevronRight /></IconButton>
       </Box>
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1 }}>
-        {daysOfWeek.map(day => (
-          <Typography key={day} variant="subtitle2" align="center" fontWeight="bold">
+      <ToggleButtonGroup
+        value={view}
+        exclusive
+        onChange={(_, v) => v && setView(v)}
+        size="small"
+        sx={{ mb: 2 }}
+      >
+        <ToggleButton value="month">Month</ToggleButton>
+        <ToggleButton value="week">Week</ToggleButton>
+        <ToggleButton value="day">Day</ToggleButton>
+      </ToggleButtonGroup>
+      <Box sx={{ display: 'grid', gridTemplateColumns: `repeat(${view === 'day' ? 1 : 7}, 1fr)`, gap: 1 }}>
+        {(view === 'day' ? [daysOfWeek[currentDate.getDay()]] : daysOfWeek).map((day, idx) => (
+          <Typography key={idx} variant="subtitle2" align="center" fontWeight="bold">
             {day}
           </Typography>
         ))}
-        {weeks.flat().map((day, idx) => {
-          const isToday =
-            day &&
-            today.getDate() === day &&
-            today.getMonth() === month &&
-            today.getFullYear() === year;
-          const eventsForDay = day ? events.filter(ev =>
-            isSameDay(new Date(ev.dateTime), new Date(year, month, day))
+        {(view === 'month' ? weeks.flat() : view === 'week' ? weekDays : [currentDate]).map((d, idx) => {
+          const dateObj = view === 'month' ? (d ? new Date(year, month, d) : null) : d;
+          const dayNumber = view === 'month' ? d : d.getDate();
+          const isToday = dateObj && isSameDay(dateObj, today);
+          const eventsForDay = dateObj ? events.filter(ev =>
+            isSameDay(new Date(ev.dateTime), dateObj)
           ) : [];
           const hasEvents = eventsForDay.length > 0;
           return (
@@ -85,24 +146,24 @@ export default function Calendar({ onDateClick, events = [] }) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                cursor: day ? 'pointer' : 'default',
+                cursor: dateObj ? 'pointer' : 'default',
                 borderRadius: 1,
                 position: 'relative',
                 backgroundColor: isToday ? 'primary.main' : undefined,
                 color: isToday ? 'primary.contrastText' : undefined,
                 '&:hover': {
-                  backgroundColor: day ? 'action.hover' : 'transparent'
+                  backgroundColor: dateObj ? 'action.hover' : 'transparent'
                 }
               }}
-              onClick={() => day && onDateClick && onDateClick(new Date(year, month, day))}
-              data-testid={day ? `day-${day}` : undefined}
+              onClick={() => dateObj && onDateClick && onDateClick(dateObj)}
+              data-testid={dateObj ? `day-${dayNumber}` : undefined}
               data-today={isToday ? 'true' : undefined}
               data-has-events={hasEvents ? 'true' : undefined}
             >
-              {day || ''}
+              {dayNumber || ''}
               {hasEvents && (
                 <Box
-                  data-testid={`events-${day}`}
+                  data-testid={`events-${dayNumber}`}
                   sx={{
                     position: 'absolute',
                     bottom: 4,
@@ -115,7 +176,7 @@ export default function Calendar({ onDateClick, events = [] }) {
                   {eventsForDay.slice(0,3).map((ev, i) => (
                     <Box
                       key={i}
-                      data-testid={`event-dot-${day}-${i}`}
+                      data-testid={`event-dot-${dayNumber}-${i}`}
                       sx={{
                         width: 6,
                         height: 6,
