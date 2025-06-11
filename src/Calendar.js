@@ -24,7 +24,7 @@ function generateCalendar(year, month) {
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export default function Calendar() {
+export default function Calendar({ onDateClick }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -57,7 +57,19 @@ export default function Calendar() {
           </Typography>
         ))}
         {weeks.flat().map((day, idx) => (
-          <Box key={idx} sx={{ border: '1px solid #e0e0e0', height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Box
+            key={idx}
+            sx={{
+              border: '1px solid #e0e0e0',
+              height: 40,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: day ? 'pointer' : 'default'
+            }}
+            onClick={() => day && onDateClick && onDateClick(new Date(year, month, day))}
+            data-testid={day ? `day-${day}` : undefined}
+          >
             {day || ''}
           </Box>
         ))}
