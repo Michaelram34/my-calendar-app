@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, List, ListItem, Typography, IconButton } from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
+import { Box, Typography, IconButton, Paper } from '@mui/material';
+import { Delete } from '@mui/icons-material';
 
 export default function EventList({ events, onEdit, onDelete }) {
   return (
@@ -8,36 +8,35 @@ export default function EventList({ events, onEdit, onDelete }) {
       <Typography variant="h6" align="center" gutterBottom>
         Events
       </Typography>
-      <List sx={{ maxHeight: '70vh', overflow: 'auto', p: 0 }}>
+      <Box sx={{ maxHeight: '70vh', overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 1 }}>
         {events.length === 0 && (
-          <ListItem>
-            <Typography variant="body2">No events</Typography>
-          </ListItem>
+          <Typography variant="body2" align="center">No events</Typography>
         )}
         {events.map((ev) => (
-          <ListItem
+          <Paper
             key={ev.id}
-            secondaryAction={
-              <Box>
-                <IconButton edge="end" aria-label="edit" onClick={() => onEdit && onEdit(ev)}>
-                  <Edit />
-                </IconButton>
-                <IconButton edge="end" aria-label="delete" onClick={() => onDelete && onDelete(ev.id)}>
-                  <Delete />
-                </IconButton>
-              </Box>
-            }
+            sx={{ p: 2, cursor: 'pointer', position: 'relative' }}
+            onClick={() => onEdit && onEdit(ev)}
           >
-            <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="subtitle1">{ev.title}</Typography>
-              <Typography variant="body2">
-                {new Date(ev.dateTime).toLocaleString()}
-                {ev.duration ? ` - ${ev.duration} min` : ''}
-              </Typography>
-            </Box>
-          </ListItem>
+            <IconButton
+              aria-label="delete"
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete && onDelete(ev.id);
+              }}
+              sx={{ position: 'absolute', top: 4, right: 4 }}
+            >
+              <Delete fontSize="small" />
+            </IconButton>
+            <Typography variant="subtitle1">{ev.title}</Typography>
+            <Typography variant="body2">
+              {new Date(ev.dateTime).toLocaleString()}
+              {ev.duration ? ` - ${ev.duration} min` : ''}
+            </Typography>
+          </Paper>
         ))}
-      </List>
+      </Box>
     </Box>
   );
 }
