@@ -18,13 +18,13 @@ import { LocalizationProvider, DatePicker, TimePicker } from '@mui/x-date-picker
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 const COLOR_OPTIONS = [
-  { name: 'Red', value: '#FF0000' },
-  { name: 'Orange', value: '#FF7F00' },
-  { name: 'Yellow', value: '#FFFF00' },
-  { name: 'Green', value: '#00FF00' },
-  { name: 'Blue', value: '#0000FF' },
-  { name: 'Indigo', value: '#4B0082' },
-  { name: 'Violet', value: '#8B00FF' }
+  { name: 'Coral Red', value: '#FF6B6B' },
+  { name: 'Amber Orange', value: '#FFA94D' },
+  { name: 'Sunflower Yellow', value: '#FFD43B' },
+  { name: 'Mint Green', value: '#69DB7C' },
+  { name: 'Sky Blue', value: '#4DABF7' },
+  { name: 'Periwinkle', value: '#9775FA' },
+  { name: 'Rose Pink', value: '#F783AC' }
 ];
 
 function isSameDay(d1, d2) {
