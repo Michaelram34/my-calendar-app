@@ -41,9 +41,6 @@ function App() {
     setDialogOpen(true);
   };
 
-  const handleDeleteEvent = (id) => {
-    setEvents(events.filter(ev => ev.id !== id));
-  };
 
   return (
     <>
@@ -60,7 +57,7 @@ function App() {
             <Calendar onDateClick={handleDateClick} />
           </Box>
           <Box sx={{ flexBasis: '35%' }}>
-            <EventList events={events} onEdit={handleEditEvent} onDelete={handleDeleteEvent} />
+            <EventList events={events} onEdit={handleEditEvent} />
           </Box>
         </Box>
         <EventManager
