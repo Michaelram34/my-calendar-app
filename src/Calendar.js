@@ -4,9 +4,10 @@ import {
   Typography,
   IconButton,
   ToggleButton,
-  ToggleButtonGroup
+  ToggleButtonGroup,
+  Button
 } from '@mui/material';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { ChevronLeft, ChevronRight, Today as TodayIcon } from '@mui/icons-material';
 
 function generateCalendar(year, month) {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -107,9 +108,19 @@ export default function Calendar({ onDateClick, events = [] }) {
   return (
     <Box sx={{ width: '100%', p: 2 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <IconButton onClick={handlePrev} data-testid="prev-month"><ChevronLeft /></IconButton>
+        <Box>
+          <IconButton onClick={handlePrev} data-testid="prev-month"><ChevronLeft /></IconButton>
+          <IconButton onClick={handleNext} data-testid="next-month"><ChevronRight /></IconButton>
+        </Box>
         <Typography variant="h6" component="div" data-testid="month-label">{monthLabel}</Typography>
-        <IconButton onClick={handleNext} data-testid="next-month"><ChevronRight /></IconButton>
+        <Button
+          onClick={() => setCurrentDate(new Date())}
+          data-testid="today-button"
+          startIcon={<TodayIcon />}
+          size="small"
+        >
+          Today
+        </Button>
       </Box>
       <ToggleButtonGroup
         value={view}
