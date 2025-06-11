@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Button,
@@ -38,11 +38,11 @@ function isSameDay(d1, d2) {
 
 export default function EventManager({ open, onClose, defaultDate, events, setEvents, editingEvent }) {
 
-  const createDefaultDateTime = (baseDate) => {
+  const createDefaultDateTime = useCallback((baseDate) => {
     const d = baseDate ? new Date(baseDate) : new Date();
     d.setHours(17, 0, 0, 0);
     return d;
-  };
+  }, []);
 
   const [title, setTitle] = useState('');
   const [dateTime, setDateTime] = useState(createDefaultDateTime());
@@ -56,13 +56,13 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
     if (open && defaultDate) {
       setDateTime(createDefaultDateTime(defaultDate));
     }
-  }, [open, defaultDate]);
+  }, [open, defaultDate, createDefaultDateTime]);
 
   useEffect(() => {
     if (!open) {
       resetForm();
     }
-  }, [open]);
+  }, [open, resetForm]);
 
   useEffect(() => {
     if (editingEvent) {
@@ -77,7 +77,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
   }, [editingEvent]);
 
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setTitle('');
     setDateTime(createDefaultDateTime());
     setDuration('');
@@ -85,7 +85,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
     setDescription('');
     setColor(COLOR_OPTIONS[0].value);
     setEditingId(null);
-  };
+  }, [createDefaultDateTime]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
