@@ -29,6 +29,7 @@ export default function Calendar({ onDateClick }) {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const weeks = generateCalendar(year, month);
+  const today = new Date();
 
   const handlePrevMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
@@ -55,28 +56,38 @@ export default function Calendar({ onDateClick }) {
             {day}
           </Typography>
         ))}
-        {weeks.flat().map((day, idx) => (
-          <Box
-            key={idx}
-            sx={{
-              border: 1,
-              borderColor: 'divider',
-              height: 60,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: day ? 'pointer' : 'default',
-              borderRadius: 1,
-              '&:hover': {
-                backgroundColor: day ? 'action.hover' : 'transparent'
-              }
-            }}
-            onClick={() => day && onDateClick && onDateClick(new Date(year, month, day))}
-            data-testid={day ? `day-${day}` : undefined}
-          >
-            {day || ''}
-          </Box>
-        ))}
+        {weeks.flat().map((day, idx) => {
+          const isToday =
+            day &&
+            today.getDate() === day &&
+            today.getMonth() === month &&
+            today.getFullYear() === year;
+          return (
+            <Box
+              key={idx}
+              sx={{
+                border: 1,
+                borderColor: 'divider',
+                height: 60,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: day ? 'pointer' : 'default',
+                borderRadius: 1,
+                backgroundColor: isToday ? 'primary.main' : undefined,
+                color: isToday ? 'primary.contrastText' : undefined,
+                '&:hover': {
+                  backgroundColor: day ? 'action.hover' : 'transparent'
+                }
+              }}
+              onClick={() => day && onDateClick && onDateClick(new Date(year, month, day))}
+              data-testid={day ? `day-${day}` : undefined}
+              data-today={isToday ? 'true' : undefined}
+            >
+              {day || ''}
+            </Box>
+          );
+        })}
       </Box>
     </Box>
   );
