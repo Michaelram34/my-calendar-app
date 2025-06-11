@@ -33,6 +33,7 @@ export default function EventList({ events, onEdit }) {
               }
             }}
           >
+            <Box sx={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: ev.color || 'secondary.main', mr: 2 }} />
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="subtitle1">{ev.title}</Typography>
               <Typography variant="body2">

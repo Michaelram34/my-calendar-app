@@ -38,6 +38,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
   const [duration, setDuration] = useState('');
   const [location, setLocation] = useState('');
   const [description, setDescription] = useState('');
+  const [color, setColor] = useState('#2196f3');
   const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
@@ -59,6 +60,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
       setDuration(editingEvent.duration || '');
       setLocation(editingEvent.location || '');
       setDescription(editingEvent.description || '');
+      setColor(editingEvent.color || '#2196f3');
       setEditingId(editingEvent.id);
     }
   }, [editingEvent]);
@@ -70,6 +72,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
     setDuration('');
     setLocation('');
     setDescription('');
+    setColor('#2196f3');
     setEditingId(null);
   };
 
@@ -82,7 +85,8 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
       dateTime: dateTime ? dateTime.toISOString() : new Date().toISOString(),
       duration,
       location,
-      description
+      description,
+      color
     };
     if (editingId) {
       setEvents(events.map(ev => (ev.id === editingId ? event : ev)));
@@ -100,6 +104,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
     setDuration(ev.duration || '');
     setLocation(ev.location || '');
     setDescription(ev.description || '');
+    setColor(ev.color || '#2196f3');
     setEditingId(id);
   };
 
@@ -170,17 +175,25 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
           />
-          <TextField
-            label="Location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            fullWidth
-          />
-          <TextField
-            label="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            multiline
+        <TextField
+          label="Location"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          fullWidth
+        />
+        <TextField
+          label="Color"
+          type="color"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+          sx={{ width: 80 }}
+          InputLabelProps={{ shrink: true }}
+        />
+        <TextField
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          multiline
             rows={3}
             fullWidth
           />
@@ -206,6 +219,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
                 onClick={() => handleEdit(ev.id)}
                 button
               >
+                <Box sx={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: ev.color || 'secondary.main', mr: 2 }} />
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="subtitle1">{ev.title}</Typography>
                   <Typography variant="body2">
