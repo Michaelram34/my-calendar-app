@@ -8,14 +8,34 @@ export default function EventList({ events, onEdit, onDelete }) {
       <Typography variant="h6" align="center" gutterBottom>
         Events
       </Typography>
-      <Box sx={{ maxHeight: '70vh', overflow: 'auto', display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <Box
+        sx={{
+          maxHeight: '70vh',
+          overflow: 'auto',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+          gap: 1
+        }}
+      >
         {events.length === 0 && (
           <Typography variant="body2" align="center">No events</Typography>
         )}
         {events.map((ev) => (
           <Paper
             key={ev.id}
-            sx={{ p: 2, cursor: 'pointer', position: 'relative' }}
+            sx={{
+              border: 1,
+              borderColor: 'divider',
+              borderRadius: 1,
+              height: 60,
+              p: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              position: 'relative',
+              cursor: 'pointer',
+              '&:hover': { backgroundColor: 'action.hover' }
+            }}
             onClick={() => onEdit && onEdit(ev)}
           >
             <IconButton
