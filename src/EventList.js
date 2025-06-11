@@ -1,8 +1,7 @@
 import React from 'react';
-import { Box, List, ListItem, Typography, IconButton } from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
+import { Box, List, ListItemButton, Typography } from '@mui/material';
 
-export default function EventList({ events, onEdit, onDelete }) {
+export default function EventList({ events, onEdit }) {
   return (
     <Box sx={{ width: '100%', p: 2 }}>
       <Typography variant="h6" align="center" gutterBottom>
@@ -10,24 +9,12 @@ export default function EventList({ events, onEdit, onDelete }) {
       </Typography>
       <List sx={{ maxHeight: '70vh', overflow: 'auto', p: 0 }}>
         {events.length === 0 && (
-          <ListItem>
+          <ListItemButton disabled>
             <Typography variant="body2">No events</Typography>
-          </ListItem>
+          </ListItemButton>
         )}
         {events.map((ev) => (
-          <ListItem
-            key={ev.id}
-            secondaryAction={
-              <Box>
-                <IconButton edge="end" aria-label="edit" onClick={() => onEdit && onEdit(ev)}>
-                  <Edit />
-                </IconButton>
-                <IconButton edge="end" aria-label="delete" onClick={() => onDelete && onDelete(ev.id)}>
-                  <Delete />
-                </IconButton>
-              </Box>
-            }
-          >
+          <ListItemButton key={ev.id} onClick={() => onEdit && onEdit(ev)}>
             <Box sx={{ flexGrow: 1 }}>
               <Typography variant="subtitle1">{ev.title}</Typography>
               <Typography variant="body2">
@@ -35,7 +22,7 @@ export default function EventList({ events, onEdit, onDelete }) {
                 {ev.duration ? ` - ${ev.duration} min` : ''}
               </Typography>
             </Box>
-          </ListItem>
+          </ListItemButton>
         ))}
       </List>
     </Box>

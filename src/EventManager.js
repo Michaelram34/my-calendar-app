@@ -167,6 +167,11 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
         </List>
       </DialogContent>
       <DialogActions>
+        {editingId && (
+          <Button color="error" onClick={() => { handleDelete(editingId); onClose(); }}>
+            Delete
+          </Button>
+        )}
         <Button onClick={onClose}>Close</Button>
       </DialogActions>
     </Dialog>
