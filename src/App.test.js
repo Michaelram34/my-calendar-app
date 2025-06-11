@@ -7,3 +7,10 @@ test('renders calendar header', () => {
   expect(header).toBeInTheDocument();
 });
 
+test("highlights today's date", () => {
+  render(<App />);
+  const today = new Date();
+  const dayCell = screen.getByTestId(`day-${today.getDate()}`);
+  expect(dayCell).toHaveAttribute('data-today', 'true');
+});
+
