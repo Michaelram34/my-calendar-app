@@ -2,6 +2,7 @@ import './App.css';
 import Calendar from './Calendar';
 import EventManager from './EventManager';
 import EventList from './EventList';
+import DateSidebar from './DateSidebar';
 import {
   Container,
   Box,
@@ -16,6 +17,7 @@ function App() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [editingEvent, setEditingEvent] = useState(null);
   const [hoveredDate, setHoveredDate] = useState(null);
+  const [hoveredCalendarDate, setHoveredCalendarDate] = useState(null);
   const [visibleRange, setVisibleRange] = useState({ start: null, end: null });
   const [events, setEvents] = useState(() => {
     const stored = localStorage.getItem('events');
@@ -47,6 +49,11 @@ function App() {
     setVisibleRange({ start: range.start, end: range.end });
   };
 
+  const handleCalendarHover = (date) => {
+    setHoveredCalendarDate(date);
+    setHoveredDate(date);
+  };
+
 
   return (
     <>
@@ -65,6 +72,7 @@ function App() {
               events={events}
               hoveredDate={hoveredDate}
               onRangeChange={handleRangeChange}
+              onDateHover={handleCalendarHover}
             />
           </Box>
           <Box sx={{ flexBasis: '35%' }}>
@@ -87,6 +95,18 @@ function App() {
           events={events}
           setEvents={setEvents}
           editingEvent={editingEvent}
+        />
+        <DateSidebar
+          open={Boolean(hoveredCalendarDate)}
+          date={hoveredCalendarDate}
+          events={hoveredCalendarDate ? events.filter(ev => {
+            const d = new Date(ev.dateTime);
+            return (
+              d.getFullYear() === hoveredCalendarDate.getFullYear() &&
+              d.getMonth() === hoveredCalendarDate.getMonth() &&
+              d.getDate() === hoveredCalendarDate.getDate()
+            );
+          }) : []}
         />
       </Container>
     </>
