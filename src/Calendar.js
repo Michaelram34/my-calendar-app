@@ -52,7 +52,7 @@ function isSameDay(d1, d2) {
   );
 }
 
-export default function Calendar({ onDateClick, events = [], hoveredDate, onRangeChange }) {
+export default function Calendar({ onDateClick, events = [], hoveredDate, onRangeChange, onDateHover }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState('month'); // month | week | day
   const year = currentDate.getFullYear();
@@ -196,6 +196,8 @@ export default function Calendar({ onDateClick, events = [], hoveredDate, onRang
                 }
               }}
               onClick={() => dateObj && onDateClick && onDateClick(dateObj)}
+              onMouseEnter={() => dateObj && onDateHover && onDateHover(dateObj)}
+              onMouseLeave={() => dateObj && onDateHover && onDateHover(null)}
               data-testid={dateObj ? `day-${dayNumber}` : undefined}
               data-today={isToday ? 'true' : undefined}
               data-hovered={isHovered ? 'true' : undefined}
