@@ -55,7 +55,6 @@ export default function EventList({ events, onEdit, onHoverDate }) {
                 <Typography variant="subtitle1" sx={{ textDecoration: isPast ? 'line-through' : 'none' }}>{ev.title}</Typography>
                 <Typography variant="body2" sx={{ textDecoration: isPast ? 'line-through' : 'none' }}>
                   {new Date(ev.dateTime).toLocaleString()}
-                  {ev.duration ? ` - ${ev.duration} min` : ''}
                   {` (${formatDaysUntil(ev.dateTime)})`}
                 </Typography>
               </Box>
