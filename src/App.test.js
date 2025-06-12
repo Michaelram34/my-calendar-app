@@ -42,3 +42,23 @@ test('today button resets the calendar', () => {
   expect(screen.getByTestId('month-label').textContent).toBe(todayLabel);
 });
 
+test('highlights date on event hover', () => {
+  const today = new Date();
+  const event = {
+    id: 2,
+    title: 'Hover Test',
+    dateTime: today.toISOString(),
+    color: '#00ff00'
+  };
+  window.localStorage.setItem('events', JSON.stringify([event]));
+  render(<App />);
+  const dayCell = screen.getByTestId(`day-${today.getDate()}`);
+  const eventItem = screen.getByText('Hover Test').closest('button');
+  expect(dayCell).not.toHaveAttribute('data-hovered', 'true');
+  fireEvent.mouseOver(eventItem);
+  expect(dayCell).toHaveAttribute('data-hovered', 'true');
+  fireEvent.mouseLeave(eventItem);
+  expect(dayCell).not.toHaveAttribute('data-hovered', 'true');
+  window.localStorage.removeItem('events');
+});
+

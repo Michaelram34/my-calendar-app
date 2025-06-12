@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, List, ListItemButton, Typography } from '@mui/material';
 
-export default function EventList({ events, onEdit }) {
+export default function EventList({ events, onEdit, onHoverDate }) {
   const sortedEvents = [...events].sort(
     (a, b) => new Date(a.dateTime) - new Date(b.dateTime)
   );
@@ -20,6 +20,8 @@ export default function EventList({ events, onEdit }) {
           <ListItemButton
             key={ev.id}
             onClick={() => onEdit && onEdit(ev)}
+            onMouseEnter={() => onHoverDate && onHoverDate(new Date(ev.dateTime))}
+            onMouseLeave={() => onHoverDate && onHoverDate(null)}
             sx={{
               mb: 1,
               border: 1,
