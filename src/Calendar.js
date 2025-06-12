@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -52,7 +52,7 @@ function isSameDay(d1, d2) {
   );
 }
 
-export default function Calendar({ onDateClick, events = [], hoveredDate }) {
+export default function Calendar({ onDateClick, events = [], hoveredDate, onRangeChange }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState('month'); // month | week | day
   const year = currentDate.getFullYear();
@@ -60,6 +60,26 @@ export default function Calendar({ onDateClick, events = [], hoveredDate }) {
   const weeks = generateCalendar(year, month);
   const weekDays = generateWeek(currentDate);
   const today = new Date();
+
+  useEffect(() => {
+    if (!onRangeChange) return;
+    let start, end;
+    if (view === 'month') {
+      start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+    } else if (view === 'week') {
+      start = new Date(currentDate);
+      start.setDate(currentDate.getDate() - start.getDay());
+      end = new Date(start);
+      end.setDate(start.getDate() + 6);
+    } else {
+      start = new Date(currentDate);
+      start.setHours(0, 0, 0, 0);
+      end = new Date(currentDate);
+      end.setHours(23, 59, 59, 999);
+    }
+    onRangeChange({ start, end, view });
+  }, [currentDate, view, onRangeChange]);
 
   const handlePrev = () => {
     if (view === 'month') {

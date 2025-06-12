@@ -62,3 +62,22 @@ test('highlights date on event hover', () => {
   window.localStorage.removeItem('events');
 });
 
+test('event list matches visible calendar range', () => {
+  const today = new Date();
+  const nextMonth = new Date(today);
+  nextMonth.setMonth(today.getMonth() + 1);
+  const events = [
+    { id: 3, title: 'This Month', dateTime: today.toISOString() },
+    { id: 4, title: 'Next Month', dateTime: nextMonth.toISOString() }
+  ];
+  window.localStorage.setItem('events', JSON.stringify(events));
+  render(<App />);
+  expect(screen.getByText('This Month')).toBeInTheDocument();
+  expect(screen.queryByText('Next Month')).toBeNull();
+  const nextBtn = screen.getByTestId('next-month');
+  fireEvent.click(nextBtn);
+  expect(screen.queryByText('This Month')).toBeNull();
+  expect(screen.getByText('Next Month')).toBeInTheDocument();
+  window.localStorage.removeItem('events');
+});
+
