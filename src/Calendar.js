@@ -60,7 +60,9 @@ export default function Calendar({ onDateClick, events = [], initialDate }) {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const weeks = generateCalendar(year, month);
-  const weekDays = generateWeek(currentDate);
+  const nextWeekStart = new Date(currentDate);
+  nextWeekStart.setDate(currentDate.getDate() + (7 - currentDate.getDay()));
+  const weekDays = generateWeek(nextWeekStart);
   const today = new Date();
 
   const handlePrev = () => {
@@ -99,8 +101,9 @@ export default function Calendar({ onDateClick, events = [], initialDate }) {
     });
   } else if (view === 'week') {
     const start = new Date(currentDate);
+    start.setDate(currentDate.getDate() + (7 - currentDate.getDay()));
     const end = new Date(start);
-    end.setDate(start.getDate() + 8);
+    end.setDate(start.getDate() + 6);
     const opts = { month: 'long', day: 'numeric', year: 'numeric' };
     monthLabel = `${start.toLocaleDateString('default', opts)} - ${end.toLocaleDateString('default', opts)}`;
   } else {
