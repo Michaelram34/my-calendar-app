@@ -109,3 +109,15 @@ test('past events are shown with strikethrough', () => {
   window.localStorage.removeItem('events');
 });
 
+test('shows days until each event', () => {
+  const future = new Date();
+  future.setDate(future.getDate() + 3);
+  const events = [
+    { id: 7, title: 'Future Event', dateTime: future.toISOString() }
+  ];
+  window.localStorage.setItem('events', JSON.stringify(events));
+  render(<App />);
+  expect(screen.getByText(/in 3 days/i)).toBeInTheDocument();
+  window.localStorage.removeItem('events');
+});
+
