@@ -62,3 +62,37 @@ test('highlights date on event hover', () => {
   window.localStorage.removeItem('events');
 });
 
+test('event list matches visible calendar range', () => {
+  const today = new Date();
+  const nextMonth = new Date(today);
+  nextMonth.setMonth(today.getMonth() + 1);
+  const events = [
+    { id: 3, title: 'This Month', dateTime: today.toISOString() },
+    { id: 4, title: 'Next Month', dateTime: nextMonth.toISOString() }
+  ];
+  window.localStorage.setItem('events', JSON.stringify(events));
+  render(<App />);
+  expect(screen.getByText('This Month')).toBeInTheDocument();
+  expect(screen.queryByText('Next Month')).toBeNull();
+  const nextBtn = screen.getByTestId('next-month');
+  fireEvent.click(nextBtn);
+  expect(screen.queryByText('This Month')).toBeNull();
+  expect(screen.getByText('Next Month')).toBeInTheDocument();
+  window.localStorage.removeItem('events');
+});
+
+test('week view includes Saturday events', () => {
+  const today = new Date();
+  const saturday = new Date(today);
+  saturday.setDate(saturday.getDate() - saturday.getDay() + 6);
+  const events = [
+    { id: 5, title: 'Saturday Event', dateTime: saturday.toISOString() }
+  ];
+  window.localStorage.setItem('events', JSON.stringify(events));
+  render(<App />);
+  const weekBtn = screen.getByRole('button', { name: /week/i });
+  fireEvent.click(weekBtn);
+  expect(screen.getByText('Saturday Event')).toBeInTheDocument();
+  window.localStorage.removeItem('events');
+});
+

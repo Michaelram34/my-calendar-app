@@ -16,6 +16,7 @@ function App() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [editingEvent, setEditingEvent] = useState(null);
   const [hoveredDate, setHoveredDate] = useState(null);
+  const [visibleRange, setVisibleRange] = useState({ start: null, end: null });
   const [events, setEvents] = useState(() => {
     const stored = localStorage.getItem('events');
     return stored ? JSON.parse(stored) : [];
@@ -42,6 +43,10 @@ function App() {
     setDialogOpen(true);
   };
 
+  const handleRangeChange = (range) => {
+    setVisibleRange({ start: range.start, end: range.end });
+  };
+
 
   return (
     <>
@@ -55,10 +60,24 @@ function App() {
       <Container maxWidth="md" className="App">
         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, width: '100%' }}>
           <Box sx={{ flexBasis: '65%', flexGrow: 1 }}>
-            <Calendar onDateClick={handleDateClick} events={events} hoveredDate={hoveredDate} />
+            <Calendar
+              onDateClick={handleDateClick}
+              events={events}
+              hoveredDate={hoveredDate}
+              onRangeChange={handleRangeChange}
+            />
           </Box>
           <Box sx={{ flexBasis: '35%' }}>
-            <EventList events={events} onEdit={handleEditEvent} onHoverDate={setHoveredDate} />
+            <EventList
+              events={visibleRange.start && visibleRange.end
+                ? events.filter(ev => {
+                    const d = new Date(ev.dateTime);
+                    return d >= visibleRange.start && d <= visibleRange.end;
+                  })
+                : events}
+              onEdit={handleEditEvent}
+              onHoverDate={setHoveredDate}
+            />
           </Box>
         </Box>
         <EventManager
