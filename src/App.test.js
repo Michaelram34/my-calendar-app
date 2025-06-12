@@ -81,3 +81,18 @@ test('event list matches visible calendar range', () => {
   window.localStorage.removeItem('events');
 });
 
+test('week view includes Saturday events', () => {
+  const today = new Date();
+  const saturday = new Date(today);
+  saturday.setDate(saturday.getDate() - saturday.getDay() + 6);
+  const events = [
+    { id: 5, title: 'Saturday Event', dateTime: saturday.toISOString() }
+  ];
+  window.localStorage.setItem('events', JSON.stringify(events));
+  render(<App />);
+  const weekBtn = screen.getByRole('button', { name: /week/i });
+  fireEvent.click(weekBtn);
+  expect(screen.getByText('Saturday Event')).toBeInTheDocument();
+  window.localStorage.removeItem('events');
+});
+

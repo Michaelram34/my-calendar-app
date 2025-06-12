@@ -66,12 +66,16 @@ export default function Calendar({ onDateClick, events = [], hoveredDate, onRang
     let start, end;
     if (view === 'month') {
       start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      start.setHours(0, 0, 0, 0);
       end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+      end.setHours(23, 59, 59, 999);
     } else if (view === 'week') {
       start = new Date(currentDate);
       start.setDate(currentDate.getDate() - start.getDay());
+      start.setHours(0, 0, 0, 0);
       end = new Date(start);
       end.setDate(start.getDate() + 6);
+      end.setHours(23, 59, 59, 999);
     } else {
       start = new Date(currentDate);
       start.setHours(0, 0, 0, 0);
