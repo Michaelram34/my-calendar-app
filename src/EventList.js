@@ -1,7 +1,19 @@
 import React from 'react';
 import { Box, List, ListItemButton, Typography } from '@mui/material';
+import { differenceInCalendarDays } from 'date-fns';
 
 export default function EventList({ events, onEdit, onHoverDate }) {
+  const formatDaysUntil = (dateStr) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const date = new Date(dateStr);
+    date.setHours(0, 0, 0, 0);
+    const diff = differenceInCalendarDays(date, today);
+    if (diff === 0) return 'Today';
+    if (diff > 0) return `in ${diff} day${diff > 1 ? 's' : ''}`;
+    const past = Math.abs(diff);
+    return `${past} day${past > 1 ? 's' : ''} ago`;
+  };
   const sortedEvents = [...events].sort(
     (a, b) => new Date(a.dateTime) - new Date(b.dateTime)
   );
@@ -44,6 +56,7 @@ export default function EventList({ events, onEdit, onHoverDate }) {
                 <Typography variant="body2" sx={{ textDecoration: isPast ? 'line-through' : 'none' }}>
                   {new Date(ev.dateTime).toLocaleString()}
                   {ev.duration ? ` - ${ev.duration} min` : ''}
+                  {` (${formatDaysUntil(ev.dateTime)})`}
                 </Typography>
               </Box>
             </ListItemButton>
