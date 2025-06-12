@@ -52,8 +52,10 @@ function isSameDay(d1, d2) {
   );
 }
 
-export default function Calendar({ onDateClick, events = [] }) {
-  const [currentDate, setCurrentDate] = useState(new Date());
+export default function Calendar({ onDateClick, events = [], initialDate }) {
+  const [currentDate, setCurrentDate] = useState(
+    initialDate ? new Date(initialDate) : new Date()
+  );
   const [view, setView] = useState('month'); // month | week | day
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -97,12 +99,16 @@ export default function Calendar({ onDateClick, events = [] }) {
     });
   } else if (view === 'week') {
     const start = new Date(currentDate);
-    start.setDate(currentDate.getDate() - start.getDay());
     const end = new Date(start);
-    end.setDate(start.getDate() + 6);
-    monthLabel = `${start.toLocaleDateString()} - ${end.toLocaleDateString()}`;
+    end.setDate(start.getDate() + 8);
+    const opts = { month: 'long', day: 'numeric', year: 'numeric' };
+    monthLabel = `${start.toLocaleDateString('default', opts)} - ${end.toLocaleDateString('default', opts)}`;
   } else {
-    monthLabel = currentDate.toDateString();
+    monthLabel = currentDate.toLocaleDateString('default', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    });
   }
 
   return (

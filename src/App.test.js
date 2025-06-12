@@ -42,3 +42,15 @@ test('today button resets the calendar', () => {
   expect(screen.getByTestId('month-label').textContent).toBe(todayLabel);
 });
 
+test('week view shows custom range', () => {
+  render(<App initialDate={new Date('2025-06-06')} />);
+  fireEvent.click(screen.getByRole('button', { name: /week/i }));
+  expect(screen.getByTestId('month-label').textContent).toBe('June 6, 2025 - June 14, 2025');
+});
+
+test('day view shows custom date', () => {
+  render(<App initialDate={new Date('2025-06-06')} />);
+  fireEvent.click(screen.getByRole('button', { name: /day/i }));
+  expect(screen.getByTestId('month-label').textContent).toBe('June 6, 2025');
+});
+

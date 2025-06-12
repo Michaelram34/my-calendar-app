@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 
-function App() {
+function App({ initialDate }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [editingEvent, setEditingEvent] = useState(null);
@@ -54,7 +54,7 @@ function App() {
       <Container maxWidth="md" className="App">
         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, width: '100%' }}>
           <Box sx={{ flexBasis: '65%', flexGrow: 1 }}>
-            <Calendar onDateClick={handleDateClick} events={events} />
+            <Calendar onDateClick={handleDateClick} events={events} initialDate={initialDate} />
           </Box>
           <Box sx={{ flexBasis: '35%' }}>
             <EventList events={events} onEdit={handleEditEvent} />
