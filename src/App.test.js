@@ -96,3 +96,16 @@ test('week view includes Saturday events', () => {
   window.localStorage.removeItem('events');
 });
 
+test('past events are shown with strikethrough', () => {
+  const past = new Date();
+  past.setDate(past.getDate() - 1);
+  const events = [
+    { id: 6, title: 'Past Event', dateTime: past.toISOString() }
+  ];
+  window.localStorage.setItem('events', JSON.stringify(events));
+  render(<App />);
+  const item = screen.getByText('Past Event');
+  expect(item).toHaveStyle('text-decoration: line-through');
+  window.localStorage.removeItem('events');
+});
+
