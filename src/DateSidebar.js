@@ -8,7 +8,13 @@ export default function DateSidebar({ open, date, events }) {
       anchor="left"
       open={open}
       variant="persistent"
-      PaperProps={{ sx: { width: 250 } }}
+      PaperProps={{
+        sx: {
+          width: 250,
+          top: '80px',
+          height: 'calc(100% - 80px)'
+        }
+      }}
     >
       <Box sx={{ p: 2 }}>
         <Typography variant="h6" gutterBottom>
