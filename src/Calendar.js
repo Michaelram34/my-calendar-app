@@ -52,7 +52,7 @@ function isSameDay(d1, d2) {
   );
 }
 
-export default function Calendar({ onDateClick, events = [] }) {
+export default function Calendar({ onDateClick, events = [], hoveredDate }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState('month'); // month | week | day
   const year = currentDate.getFullYear();
@@ -143,6 +143,7 @@ export default function Calendar({ onDateClick, events = [] }) {
           const dateObj = view === 'month' ? (d ? new Date(year, month, d) : null) : d;
           const dayNumber = view === 'month' ? d : d.getDate();
           const isToday = dateObj && isSameDay(dateObj, today);
+          const isHovered = dateObj && hoveredDate && isSameDay(dateObj, hoveredDate);
           const eventsForDay = dateObj ? events.filter(ev =>
             isSameDay(new Date(ev.dateTime), dateObj)
           ) : [];
@@ -160,7 +161,11 @@ export default function Calendar({ onDateClick, events = [] }) {
                 cursor: dateObj ? 'pointer' : 'default',
                 borderRadius: 1,
                 position: 'relative',
-                backgroundColor: isToday ? 'primary.main' : undefined,
+                backgroundColor: isToday
+                  ? 'primary.main'
+                  : isHovered
+                  ? 'action.selected'
+                  : undefined,
                 color: isToday ? 'primary.contrastText' : undefined,
                 '&:hover': {
                   backgroundColor: dateObj ? 'action.hover' : 'transparent'
@@ -169,6 +174,7 @@ export default function Calendar({ onDateClick, events = [] }) {
               onClick={() => dateObj && onDateClick && onDateClick(dateObj)}
               data-testid={dateObj ? `day-${dayNumber}` : undefined}
               data-today={isToday ? 'true' : undefined}
+              data-hovered={isHovered ? 'true' : undefined}
               data-has-events={hasEvents ? 'true' : undefined}
             >
               {dayNumber || ''}

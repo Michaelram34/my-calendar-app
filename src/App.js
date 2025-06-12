@@ -15,6 +15,7 @@ function App() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [editingEvent, setEditingEvent] = useState(null);
+  const [hoveredDate, setHoveredDate] = useState(null);
   const [events, setEvents] = useState(() => {
     const stored = localStorage.getItem('events');
     return stored ? JSON.parse(stored) : [];
@@ -54,10 +55,10 @@ function App() {
       <Container maxWidth="md" className="App">
         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, width: '100%' }}>
           <Box sx={{ flexBasis: '65%', flexGrow: 1 }}>
-            <Calendar onDateClick={handleDateClick} events={events} />
+            <Calendar onDateClick={handleDateClick} events={events} hoveredDate={hoveredDate} />
           </Box>
           <Box sx={{ flexBasis: '35%' }}>
-            <EventList events={events} onEdit={handleEditEvent} />
+            <EventList events={events} onEdit={handleEditEvent} onHoverDate={setHoveredDate} />
           </Box>
         </Box>
         <EventManager
