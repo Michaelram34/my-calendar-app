@@ -10,8 +10,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
-  MenuItem
+  DialogActions
 } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { LocalizationProvider, DatePicker, TimePicker } from '@mui/x-date-pickers';
@@ -192,27 +191,27 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
           onChange={(e) => setLocation(e.target.value)}
           fullWidth
         />
-        <TextField
-          select
-          label="Color"
-          value={color}
-          onChange={(e) => setColor(e.target.value)}
-          sx={{ minWidth: 120 }}
-        >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography variant="body2" sx={{ minWidth: 50 }}>
+            Color
+          </Typography>
           {COLOR_OPTIONS.map((opt) => (
-            <MenuItem key={opt.value} value={opt.value}>
-              <Box sx={{
-                width: 12,
-                height: 12,
+            <IconButton
+              key={opt.value}
+              onClick={() => setColor(opt.value)}
+              size="small"
+              sx={{
+                width: 24,
+                height: 24,
                 borderRadius: '50%',
                 backgroundColor: opt.value,
-                display: 'inline-block',
-                mr: 1
-              }} />
-              {opt.name}
-            </MenuItem>
+                border: color === opt.value
+                  ? '2px solid black'
+                  : '1px solid rgba(0,0,0,0.2)'
+              }}
+            />
           ))}
-        </TextField>
+        </Box>
         <TextField
           label="Description"
           value={description}
