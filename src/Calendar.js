@@ -61,7 +61,8 @@ export default function Calendar({ onDateClick, events = [], initialDate }) {
   const month = currentDate.getMonth();
   const weeks = generateCalendar(year, month);
   const nextWeekStart = new Date(currentDate);
-  nextWeekStart.setDate(currentDate.getDate() + (7 - currentDate.getDay()));
+  const weekOffset = currentDate.getDay() === 0 ? 0 : 7 - currentDate.getDay();
+  nextWeekStart.setDate(currentDate.getDate() + weekOffset);
   const weekDays = generateWeek(nextWeekStart);
   const today = new Date();
 
@@ -101,7 +102,7 @@ export default function Calendar({ onDateClick, events = [], initialDate }) {
     });
   } else if (view === 'week') {
     const start = new Date(currentDate);
-    start.setDate(currentDate.getDate() + (7 - currentDate.getDay()));
+    start.setDate(currentDate.getDate() + weekOffset);
     const end = new Date(start);
     end.setDate(start.getDate() + 6);
     const opts = { month: 'long', day: 'numeric', year: 'numeric' };
