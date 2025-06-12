@@ -231,27 +231,31 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
                 <Typography variant="body2">No events</Typography>
               </ListItem>
             )}
-            {eventsForDay.map((ev) => (
-              <ListItem
-                key={ev.id}
-                secondaryAction={
-                  <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(ev.id)}>
-                    <Delete />
-                  </IconButton>
-                }
-                onClick={() => handleEdit(ev.id)}
-                button
-              >
-                <Box sx={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: ev.color || 'secondary.main', mr: 2 }} />
-                <Box sx={{ flexGrow: 1 }}>
-                  <Typography variant="subtitle1">{ev.title}</Typography>
-                  <Typography variant="body2">
-                    {new Date(ev.dateTime).toLocaleString()}
-                    {ev.duration ? ` - ${ev.duration} min` : ''}
-                  </Typography>
-                </Box>
-              </ListItem>
-            ))}
+            {eventsForDay.map((ev) => {
+              const isPast = new Date(ev.dateTime) < new Date();
+              return (
+                <ListItem
+                  key={ev.id}
+                  secondaryAction={
+                    <IconButton edge="end" aria-label="delete" onClick={() => handleDelete(ev.id)}>
+                      <Delete />
+                    </IconButton>
+                  }
+                  onClick={() => handleEdit(ev.id)}
+                  button
+                  data-testid={`manager-item-${ev.id}`}
+                >
+                  <Box sx={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: ev.color || 'secondary.main', mr: 2 }} />
+                  <Box sx={{ flexGrow: 1 }}>
+                    <Typography variant="subtitle1" sx={{ textDecoration: isPast ? 'line-through' : 'none' }}>{ev.title}</Typography>
+                    <Typography variant="body2" sx={{ textDecoration: isPast ? 'line-through' : 'none' }}>
+                      {new Date(ev.dateTime).toLocaleString()}
+                      {ev.duration ? ` - ${ev.duration} min` : ''}
+                    </Typography>
+                  </Box>
+                </ListItem>
+              );
+            })}
           </List>
         )}
       </DialogContent>
