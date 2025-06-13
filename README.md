@@ -12,6 +12,8 @@ npm install
 
 This installs Material UI along with the `@mui/x-date-pickers` package used by the event manager.
 
+Internet access is required at runtime for the location search and map preview, which rely on the public OpenStreetMap API.
+
 ## Available Scripts
 
 In the project directory, you can run:

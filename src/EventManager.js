@@ -15,6 +15,8 @@ import {
 import { Delete } from '@mui/icons-material';
 import { LocalizationProvider, DatePicker, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import LocationInput from './LocationInput';
+import MapDisplay from './MapDisplay';
 
 const COLOR_OPTIONS = [
   { name: 'Coral Red', value: '#FF6B6B' },
@@ -47,6 +49,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
   const [dateTime, setDateTime] = useState(createDefaultDateTime());
   const [duration, setDuration] = useState('');
   const [location, setLocation] = useState('');
+  const [locationMeta, setLocationMeta] = useState(null);
   const [description, setDescription] = useState('');
   const [color, setColor] = useState(COLOR_OPTIONS[0].value);
   const [editingId, setEditingId] = useState(null);
@@ -56,6 +59,7 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
     setDateTime(createDefaultDateTime());
     setDuration('');
     setLocation('');
+    setLocationMeta(null);
     setDescription('');
     setColor(COLOR_OPTIONS[0].value);
     setEditingId(null);
@@ -79,6 +83,16 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
       setDateTime(new Date(editingEvent.dateTime));
       setDuration(editingEvent.duration || '');
       setLocation(editingEvent.location || '');
+      setLocationMeta(
+        editingEvent.locationLat != null && editingEvent.locationLon != null
+          ? {
+              address: editingEvent.location,
+              latitude: editingEvent.locationLat,
+              longitude: editingEvent.locationLon,
+              placeId: editingEvent.locationId,
+            }
+          : null
+      );
       setDescription(editingEvent.description || '');
       setColor(editingEvent.color || COLOR_OPTIONS[0].value);
       setEditingId(editingEvent.id);
@@ -94,6 +108,9 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
       dateTime: dateTime ? dateTime.toISOString() : new Date().toISOString(),
       duration,
       location,
+      locationLat: locationMeta?.latitude || null,
+      locationLon: locationMeta?.longitude || null,
+      locationId: locationMeta?.placeId || null,
       description,
       color
     };
@@ -113,6 +130,16 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
     setDateTime(new Date(ev.dateTime));
     setDuration(ev.duration || '');
     setLocation(ev.location || '');
+    setLocationMeta(
+      ev.locationLat != null && ev.locationLon != null
+        ? {
+            address: ev.location,
+            latitude: ev.locationLat,
+            longitude: ev.locationLon,
+            placeId: ev.locationId,
+          }
+        : null
+    );
     setDescription(ev.description || '');
     setColor(ev.color || COLOR_OPTIONS[0].value);
     setEditingId(id);
@@ -185,12 +212,14 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
           />
-        <TextField
-          label="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          fullWidth
+        <LocationInput
+          value={locationMeta || { address: location }}
+          onChange={(meta) => {
+            setLocation(meta.address);
+            setLocationMeta(meta);
+          }}
         />
+        <MapDisplay latitude={locationMeta?.latitude} longitude={locationMeta?.longitude} />
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Typography variant="body2" sx={{ minWidth: 50 }}>
             Color
