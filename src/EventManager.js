@@ -169,90 +169,95 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
         Manage Events{defaultDate ? ` - ${new Date(defaultDate).toDateString()}` : ''}
       </DialogTitle>
       <DialogContent>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 2, mt: 1 }}
-        >
-          <TextField
-            label="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DatePicker
-            label="Date"
-            value={dateTime}
-            onChange={(newValue) => {
-              if (newValue) {
-                const updated = new Date(dateTime);
-                updated.setFullYear(newValue.getFullYear(), newValue.getMonth(), newValue.getDate());
-                setDateTime(updated);
-              }
-            }}
-            slotProps={{ textField: { variant: 'outlined' } }}
-          />
-          <TimePicker
-            label="Time"
-            value={dateTime}
-            onChange={(newValue) => {
-              if (newValue) {
-                const updated = new Date(dateTime);
-                updated.setHours(newValue.getHours(), newValue.getMinutes());
-                setDateTime(updated);
-              }
-            }}
-            slotProps={{ textField: { variant: 'outlined' } }}
-          />
-        </LocalizationProvider>
-          <TextField
-            label="Duration (minutes)"
-            type="number"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-          />
-        <LocationInput
-          value={locationMeta || { address: location }}
-          onChange={(meta) => {
-            setLocation(meta.address);
-            setLocationMeta(meta);
-          }}
-        />
-        <MapDisplay latitude={locationMeta?.latitude} longitude={locationMeta?.longitude} />
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="body2" sx={{ minWidth: 50 }}>
-            Color
-          </Typography>
-          {COLOR_OPTIONS.map((opt) => (
-            <IconButton
-              key={opt.value}
-              onClick={() => setColor(opt.value)}
-              size="small"
-              sx={{
-                width: 24,
-                height: 24,
-                borderRadius: '50%',
-                backgroundColor: opt.value,
-                border: color === opt.value
-                  ? '2px solid black'
-                  : '1px solid rgba(0,0,0,0.2)'
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 2, mt: 1 }}
+          >
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <TextField
+                label="Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                sx={{ flex: 1 }}
+              />
+              <DatePicker
+                label="Date"
+                value={dateTime}
+                onChange={(newValue) => {
+                  if (newValue) {
+                    const updated = new Date(dateTime);
+                    updated.setFullYear(newValue.getFullYear(), newValue.getMonth(), newValue.getDate());
+                    setDateTime(updated);
+                  }
+                }}
+                slotProps={{ textField: { variant: 'outlined' } }}
+              />
+            </Box>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <TimePicker
+                label="Time"
+                value={dateTime}
+                onChange={(newValue) => {
+                  if (newValue) {
+                    const updated = new Date(dateTime);
+                    updated.setHours(newValue.getHours(), newValue.getMinutes());
+                    setDateTime(updated);
+                  }
+                }}
+                slotProps={{ textField: { variant: 'outlined' } }}
+              />
+              <TextField
+                label="Duration (minutes)"
+                type="number"
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+              />
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography variant="body2" sx={{ minWidth: 50 }}>
+                Color
+              </Typography>
+              {COLOR_OPTIONS.map((opt) => (
+                <IconButton
+                  key={opt.value}
+                  onClick={() => setColor(opt.value)}
+                  size="small"
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: '50%',
+                    backgroundColor: opt.value,
+                    border: color === opt.value
+                      ? '2px solid black'
+                      : '1px solid rgba(0,0,0,0.2)'
+                  }}
+                />
+              ))}
+            </Box>
+            <LocationInput
+              value={locationMeta || { address: location }}
+              onChange={(meta) => {
+                setLocation(meta.address);
+                setLocationMeta(meta);
               }}
             />
-          ))}
-        </Box>
-        <TextField
-          label="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          multiline
-            rows={3}
-            fullWidth
-          />
-          <Button type="submit" variant="contained">
-            {editingId ? 'Update' : 'Add'}
-          </Button>
-        </Box>
+            <MapDisplay latitude={locationMeta?.latitude} longitude={locationMeta?.longitude} />
+            <TextField
+              label="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              multiline
+              rows={3}
+              fullWidth
+            />
+            <Button type="submit" variant="contained">
+              {editingId ? 'Update' : 'Add'}
+            </Button>
+          </Box>
+        </LocalizationProvider>
         {showList && (
           <List sx={{ maxHeight: 300, overflow: 'auto' }}>
             {eventsForDay.length === 0 && (
