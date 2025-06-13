@@ -3,12 +3,14 @@ import Calendar from './Calendar';
 import EventManager from './EventManager';
 import EventList from './EventList';
 import DateSidebar from './DateSidebar';
+import ItineraryDialog from './ItineraryDialog';
 import {
   Container,
   Box,
   AppBar,
   Toolbar,
-  Typography
+  Typography,
+  Button
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 
@@ -19,6 +21,7 @@ function App() {
   const [hoveredDate, setHoveredDate] = useState(null);
   const [hoveredCalendarDate, setHoveredCalendarDate] = useState(null);
   const [visibleRange, setVisibleRange] = useState({ start: null, end: null });
+  const [itineraryOpen, setItineraryOpen] = useState(false);
   const [events, setEvents] = useState(() => {
     const stored = localStorage.getItem('events');
     return stored ? JSON.parse(stored) : [];
@@ -67,6 +70,7 @@ function App() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             My Calendar
           </Typography>
+          <Button color="inherit" onClick={() => setItineraryOpen(true)}>Itinerary</Button>
         </Toolbar>
       </AppBar>
       <Container maxWidth="md" className="App">
@@ -112,6 +116,11 @@ function App() {
               d.getDate() === hoveredCalendarDate.getDate()
             );
           }) : []}
+        />
+        <ItineraryDialog
+          open={itineraryOpen}
+          onClose={() => setItineraryOpen(false)}
+          events={events}
         />
       </Container>
     </>

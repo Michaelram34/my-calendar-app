@@ -121,3 +121,20 @@ test('shows days until each event', () => {
   window.localStorage.removeItem('events');
 });
 
+
+test('itinerary dialog shows events in range', () => {
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const events = [
+    { id: 8, title: 'Today Event', dateTime: today.toISOString() },
+    { id: 9, title: 'Tomorrow Event', dateTime: tomorrow.toISOString() }
+  ];
+  window.localStorage.setItem('events', JSON.stringify(events));
+  render(<App />);
+  const btn = screen.getByRole('button', { name: /itinerary/i });
+  fireEvent.click(btn);
+  expect(screen.getByText('Today Event')).toBeInTheDocument();
+  expect(screen.queryByText('Tomorrow Event')).toBeNull();
+  window.localStorage.removeItem('events');
+});
