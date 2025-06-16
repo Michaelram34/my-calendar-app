@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, List, ListItemButton, Typography } from '@mui/material';
+import { Box, List, ListItemButton, Typography, IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import { differenceInCalendarDays } from 'date-fns';
 
-export default function EventList({ events, onEdit, onHoverDate }) {
+export default function EventList({ events, onEdit, onHoverDate, onAdd }) {
   const formatDaysUntil = (dateStr) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -19,9 +20,22 @@ export default function EventList({ events, onEdit, onHoverDate }) {
   );
   return (
     <Box sx={{ width: '100%', p: 2 }}>
-      <Typography variant="h6" align="center" gutterBottom>
-        Events
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1 }}>
+        <Typography variant="h6" align="center" sx={{ flexGrow: 1 }} gutterBottom>
+          Events
+        </Typography>
+        {onAdd && (
+          <IconButton
+            aria-label="add event"
+            onClick={onAdd}
+            size="small"
+            color="primary"
+            data-testid="add-event-button"
+          >
+            <AddIcon />
+          </IconButton>
+        )}
+      </Box>
       <List sx={{ maxHeight: '70vh', overflow: 'auto', p: 0, pt: 1 }}>
         {sortedEvents.length === 0 && (
           <ListItemButton disabled sx={{ border: 1, borderColor: 'divider', mb: 1, borderRadius: 1 }}>
