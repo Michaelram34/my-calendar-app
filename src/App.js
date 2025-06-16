@@ -94,6 +94,11 @@ function App() {
                 : events}
               onEdit={handleEditEvent}
               onHoverDate={setHoveredDate}
+              onAdd={() => {
+                setSelectedDate(null);
+                setEditingEvent(null);
+                setDialogOpen(true);
+              }}
             />
           </Box>
         </Box>

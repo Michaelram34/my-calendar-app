@@ -138,3 +138,10 @@ test('itinerary dialog shows events in range', () => {
   expect(screen.queryByText('Tomorrow Event')).toBeNull();
   window.localStorage.removeItem('events');
 });
+
+test('add event button opens manager', () => {
+  render(<App />);
+  const addBtn = screen.getByTestId('add-event-button');
+  fireEvent.click(addBtn);
+  expect(screen.getByText(/manage events/i)).toBeInTheDocument();
+});
