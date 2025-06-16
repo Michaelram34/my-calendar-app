@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, List, ListItemButton, Typography, IconButton } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 import { differenceInCalendarDays } from 'date-fns';
 
 export default function EventList({ events, onEdit, onHoverDate, onAdd }) {
@@ -25,8 +25,14 @@ export default function EventList({ events, onEdit, onHoverDate, onAdd }) {
           Events
         </Typography>
         {onAdd && (
-          <IconButton aria-label="add event" onClick={onAdd} size="small" data-testid="add-event-button">
-            <Add />
+          <IconButton
+            aria-label="add event"
+            onClick={onAdd}
+            size="small"
+            color="primary"
+            data-testid="add-event-button"
+          >
+            <AddIcon />
           </IconButton>
         )}
       </Box>
