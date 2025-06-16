@@ -159,9 +159,9 @@ export default function EventManager({ open, onClose, defaultDate, events, setEv
     ? events.filter(ev =>
         isSameDay(new Date(ev.dateTime), new Date(defaultDate))
       )
-    : events;
+    : [];
 
-  const showList = defaultDate || !editingEvent;
+  const showList = Boolean(defaultDate);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
